@@ -14,7 +14,10 @@ from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 import webapp2
 
-TOKEN = 'YOUR_BOT_TOKEN_HERE'
+import translate_morse_input
+import translate_english_input
+
+TOKEN = '130672336:AAFs_OY05XVoAj-4h4eVfqFRFvGva8_7C7w'
 
 BASE_URL = 'https://api.telegram.org/bot' + TOKEN + '/'
 
@@ -125,10 +128,11 @@ class WebhookHandler(webapp2.RequestHandler):
 
         # CUSTOMIZE FROM HERE
 
-        elif 'who are you' in text:
-            reply('telebot starter kit, created by yukuku: https://github.com/yukuku/telebot')
-        elif 'what time' in text:
-            reply('look at the top-right corner of your screen!')
+        elif '-' in text or '.' in text:
+            rply = translate_morse_input.translate_morse_input(text)
+            reply(rply)
+        elif text.isalpha() or ' ' in text :
+            reply((translate_english_input.eng_to_morse(text)))
         else:
             if getEnabled(chat_id):
                 try:
